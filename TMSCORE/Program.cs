@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics; 
+// fixed null handling
 // Declare the variable as nullable with '?' 
 // This tells the compiler: "I know this might be null. I accept responsibility." 
 string? region = null; 
@@ -15,7 +16,7 @@ Console.WriteLine($"Region (coalesced): {displayRegion}");
 region ??= "Addis Ababa"; 
 Console.WriteLine($"Region (assigned): {region}"); 
 
-
+//Declaring First TMS Variables 
 string studentName = "Abeba"; 
 string studentId = "STU-001"; 
 int enrollmentCount = 3; 
@@ -35,30 +36,26 @@ decimal totalAllocation = grantPerStudent * 100_000m;
 Console.WriteLine($"Total allocated (decimal): {totalAllocation}"); 
 Console.WriteLine($"Total allocated (formatted): {totalAllocation:F2}"); 
 
-
+// Immutable by design — the logging pipeline cannot corrupt this 
 var enrollment = new EnrollmentRecord("STU-001", "CS-401", DateTime.UtcNow); 
 Console.WriteLine(enrollment); 
+ 
+//One line. The primary constructor parameters become init-only properties automatically. No 
+//one can write enrollment.CourseCode = null after construction — the compiler prevents it.
 // Try to mutate it — uncomment this line and see the compiler error: 
 //enrollment.CourseCode = "HACKED";  // ERROR: init-only property 
-
-
-
 
 // Non-destructive copy — creates a NEW record with one field changed 
 var corrected = enrollment with { CourseCode = "CS-402" }; 
 Console.WriteLine(corrected);
 
-
- 
 // Value equality — two records with the same data are equal 
 var duplicate = new EnrollmentRecord("STU-001", "CS-401", enrollment.EnrolledAt); 
 Console.WriteLine($"Same data? {enrollment == duplicate}");  // True 
 
-
+// invalid inputs checking
 var course = new Course { Code = "CS-401", Title = "Advanced C#", Capacity = 30 }; 
 Console.WriteLine($"Course: {course.Title} (Capacity: {course.Capacity})"); 
-
-
 // Invalid capacity — should throw 
 try 
 { 
@@ -68,8 +65,6 @@ catch (ArgumentOutOfRangeException ex)
 { 
 Console.WriteLine($"Caught: {ex.Message}"); 
 } 
-
-
 // Invalid title — should throw 
 try
 {
@@ -80,16 +75,16 @@ catch (ArgumentException ex)
 { 
 Console.WriteLine($"Caught: {ex.Message}"); 
 } 
-
-
 var s = new Student { Id = "S1", Name = "Abeba", Age = 20, GPA = 3.8m }; 
 Console.WriteLine($"Student: {s.Name}, GPA: {s.GPA}"); 
 // These should throw — try each one: 
 // new Student { Id = "S2", Name = "", Age = 20, GPA = 3.0m };         
 // new Student { Id = "S3", Name = "Test", Age = 12, GPA = 3.0m };   
 // new Student { Id = "S4", Name = "Test", Age = 20, GPA = 5.0m };  
- 
 
+
+ 
+// interface contrect
  void PrintGradeReport(IEnumerable<IGradable> assessments) 
 { 
     Console.WriteLine("--- Grade Report ---"); 
@@ -98,7 +93,7 @@ Console.WriteLine($"Student: {s.Name}, GPA: {s.GPA}");
         Console.WriteLine($"{item.Title}: {item.CalculateGrade():F2}%"); 
     } 
 } 
- 
+ // Polymorphic Report 
 // Test it — one array holds two completely different types 
 IGradable[] cohortAssessments = [ 
     new Quiz { Title = "C# Basics", CorrectAnswers = 18, TotalQuestions = 20 }, 
