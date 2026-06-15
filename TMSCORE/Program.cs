@@ -16,6 +16,7 @@ Console.WriteLine($"Region (coalesced): {displayRegion}");
 region ??= "Addis Ababa"; 
 Console.WriteLine($"Region (assigned): {region}"); 
 
+
 //Declaring First TMS Variables 
 string studentName = "Abeba"; 
 string studentId = "STU-001"; 
@@ -34,13 +35,13 @@ Console.WriteLine($"Campus: {campusRegion ?? "Not assigned"}");
 decimal grantPerStudent = 1999.99m; 
 decimal totalAllocation = grantPerStudent * 100_000m; 
 Console.WriteLine($"Total allocated (decimal): {totalAllocation}"); 
-Console.WriteLine($"Total allocated (formatted): {totalAllocation:F2}"); 
+Console.WriteLine($"Total allocated (formatted): {totalAllocation:F2}");
+
 
 // Immutable by design — the logging pipeline cannot corrupt this 
 var enrollment = new EnrollmentRecord("STU-001", "CS-401", DateTime.UtcNow); 
 Console.WriteLine(enrollment); 
- 
-//One line. The primary constructor parameters become init-only properties automatically. No 
+ //One line. The primary constructor parameters become init-only properties automatically. No 
 //one can write enrollment.CourseCode = null after construction — the compiler prevents it.
 // Try to mutate it — uncomment this line and see the compiler error: 
 //enrollment.CourseCode = "HACKED";  // ERROR: init-only property 
@@ -84,7 +85,7 @@ Console.WriteLine($"Student: {s.Name}, GPA: {s.GPA}");
 
 
  
-// interface contrect
+// interface contract
  void PrintGradeReport(IEnumerable<IGradable> assessments) 
 { 
     Console.WriteLine("--- Grade Report ---"); 
@@ -92,8 +93,7 @@ Console.WriteLine($"Student: {s.Name}, GPA: {s.GPA}");
     { 
         Console.WriteLine($"{item.Title}: {item.CalculateGrade():F2}%"); 
     } 
-} 
- // Polymorphic Report 
+}// Polymorphic Report 
 // Test it — one array holds two completely different types 
 IGradable[] cohortAssessments = [ 
     new Quiz { Title = "C# Basics", CorrectAnswers = 18, TotalQuestions = 20 }, 
@@ -102,9 +102,10 @@ IGradable[] cohortAssessments = [
  
 PrintGradeReport(cohortAssessments); 
 
+
+
+// regisration checking
 var service = new EnrollmentService(); 
- 
- 
 // Test 1: Valid registration 
 var validStudent = new Student { Id = "S1", Name = "Abeba", Age = 20, GPA = 3.8m }; 
 var validCourse = new Course { Code = "CS-401", Title = "Advanced C#", Capacity = 30 }; 
@@ -121,8 +122,7 @@ catch (ArgumentNullException ex)
     Console.WriteLine($"Guard caught: {ex.ParamName}"); 
 }
 
- 
- // Test 3: Full course  should throw 
+// Test 3: Full course  should throw 
 var fullCourse = new Course { Code = "CS-402", Title = "Full Course", Capacity = 1 }; 
  fullCourse.EnrolledCount = 1; 
 try
@@ -165,8 +165,6 @@ foreach (var name in leaderboard)
     Console.WriteLine($"- {name}"); 
 }
 
-
-
 // Class Average 
 // TODO 5: Use LINQ to calculate the average GPA across all students. 
 //   Format it to 2 decimal places using :F2. 
@@ -192,6 +190,7 @@ foreach (var student in group)
 Console.WriteLine($"  {student.Name}  GPA: {student.GPA}"); 
 } 
 } 
+
 // Collection Expressions with Spread 
 // TODO 7: Use the spread operator (..) to merge two arrays and append a value. 
 // Stuck? Pattern: string[] combined = [..array1, ..array2, "extra"]; 
@@ -320,7 +319,6 @@ foreach (var student in loadedstudents)
         Console.WriteLine($"  Rejected: {student.Name}  {ex.Message}"); 
     } 
 } 
-sw.Stop();
 
 try
 {
@@ -350,14 +348,14 @@ catch (CapacityReachedException ex)
     Console.WriteLine($"  Course: {ex.CourseCode}");
     Console.WriteLine($"  Message: {ex.Message}");
 }
-
-
 // Stop the timer 
 sw.Stop(); 
+
 // Calculate class average GPA from loaded students 
 decimal classAverage = loadedstudents.Length > 0 
 ? loadedstudents.Average(s => s.GPA) 
 : 0m; 
+
 // Print the final report 
 Console.WriteLine("\n========== ENROLLMENT SUMMARY =========="); 
 Console.WriteLine($"Total students loaded:      {loadedstudents.Length}"); 
