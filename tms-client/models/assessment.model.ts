@@ -24,6 +24,7 @@ export function calculateGrade(item: AssessmentItem): number {
       return Math.round( 
         item.functionalityScore * 0.7 + item.codeQualityScore * 0.3, 
       ); 
+
   } 
 } 
 
