@@ -23,10 +23,7 @@ export function renderResponse<T>(
     case "error":
       return `Error ${response.statusCode}: ${response.message}`;
 
-    default: {
-      const _check: never = response;
-      throw new Error(`Unhandled status: ${JSON.stringify(_check)}`);
-    }
+    
   }
 }
 
