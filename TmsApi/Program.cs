@@ -1,17 +1,80 @@
+using Microsoft.AspNetCore.Authentication;
+//using Microsoft.AspNetCore.Authentication;
+
+/*// Starter pipeline (do not assume this order is correct) 
 var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
 
-// Add services to the container.
+app.MapGet("/api/assessments/results", () =>
+{
+    return Results.Ok(new
+    {
+        courseCode = "CS-101",
+        studentId = "S-001",
+        letterGrade = "A"
+    });
+});
+//app.UseAuthentication(); 
+//app.UseAuthorization();
+app.Run();*/
 
-builder.Services.AddControllers();
+
+/*var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication("Fake")
+    .AddScheme<AuthenticationSchemeOptions, FakeAuthHandler>("Fake", null);
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseRouting();
 
-app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapGet("/api/assessments/results", () =>
+{
+    return Results.Ok(new
+    {
+        courseCode = "CS-101",
+        studentId = "S-001",
+        letterGrade = "A"
+    });
+})
+.RequireAuthorization();
+
+app.Run();*/
+
+
+
+var builder = WebApplication.CreateBuilder(args);
+
+// auth services
+builder.Services.AddAuthentication("TmsScheme")
+    .AddScheme<AuthenticationSchemeOptions, TmsAssessmentAuthHandler>("TmsScheme", null);
+
+builder.Services.AddAuthorization();
+
+var app = builder.Build();
+
+// middleware order
+app.UseMiddleware<RequestLoggingMiddleware>();
+
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+
+// ONLY ONE endpoint (no duplicates)
+app.MapGet("/api/assessments/results", () =>
+{
+    return Results.Ok(new
+    {
+        courseCode = "CS-101",
+        studentId = "S-001",
+        letterGrade = "A"
+    });
+})
+.RequireAuthorization();
 
 app.Run();
