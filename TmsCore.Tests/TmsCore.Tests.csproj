@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\TMSCORE\TMSCORE.csproj" />
+    <ProjectReference Include="..\TmsCore\TmsCore.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

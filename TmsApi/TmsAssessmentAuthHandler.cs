@@ -4,12 +4,12 @@ using System.Text.Encodings.Web;
 
 public class TmsAssessmentAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
+    // The ISystemClock parameter is removed completely from the constructor signatures
     public TmsAssessmentAuthHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
-        UrlEncoder encoder,
-        ISystemClock clock)
-        : base(options, logger, encoder, clock)
+        UrlEncoder encoder)
+        : base(options, logger, encoder)
     { }
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()

@@ -85,7 +85,7 @@ Console.WriteLine($"Student: {s.Name}, GPA: {s.GPA}");
 
 
  
-// interface contract
+/*// interface contract
  void PrintGradeReport(IEnumerable<IGradable> assessments) 
 { 
     Console.WriteLine("--- Grade Report ---"); 
@@ -105,12 +105,12 @@ PrintGradeReport(cohortAssessments);
 
 
 // regisration checking
-var service = new EnrollmentService(); 
+//var service = new EnrollmentService(); 
 // Test 1: Valid registration 
 var validStudent = new Student { Id = "S1", Name = "Abeba", Age = 20, GPA = 3.8m }; 
 var validCourse = new Course { Code = "CS-401", Title = "Advanced C#", Capacity = 30 }; 
-var result = service.ProcessRegistration(validStudent, validCourse); 
-Console.WriteLine($"Enrolled: {result.StudentId} in {result.CourseCode}");
+//var result = service.ProcessRegistration(validStudent, validCourse); 
+//Console.WriteLine($"Enrolled: {result.StudentId} in {result.CourseCode}");
 
 // Test 2: Null student  should throw 
 try 
@@ -132,11 +132,11 @@ try
 catch (InvalidOperationException ex) 
 { 
 Console.WriteLine($"Business rule: {ex.Message}"); 
-} 
+} */
 
 
 
-// C# 12+ Collection Expressions  the modern way to initialize lists 
+/*// C# 12+ Collection Expressions  the modern way to initialize lists 
 List<Student> students = [ 
     new Student { Id = "S1", Name = "Abeba", Age = 22, GPA = 3.8m }, 
     new Student { Id = "S2", Name = "Kidane", Age = 21, GPA = 2.4m }, 
@@ -298,7 +298,7 @@ foreach (var student in loadedstudents)
 //Now connect the pieces. You will load students in parallel, then attempt to enroll each one in a 
 //course tracking successes and failures. 
 var enrollCourse = new Course { Code = "CRS-101", Title = "C# Mastery", Capacity = 2 }; 
-var enrollService = new EnrollmentService(); 
+//var enrollService = new EnrollmentService(); 
 var enrollments = new List<EnrollmentRecord>(); 
 var failures = new List<string>(); 
  
@@ -308,9 +308,9 @@ foreach (var student in loadedstudents)
 { 
     try 
     { 
-        var record = enrollService.ProcessRegistration(student, enrollCourse); 
+  //      var record = enrollService.ProcessRegistration(student, enrollCourse); 
         enrollCourse.EnrolledCount++; 
-        enrollments.Add(record); 
+    //    enrollments.Add(record); 
         Console.WriteLine($"  Enrolled: {student.Name}"); 
     } 
     catch (CapacityReachedException ex) 
@@ -331,7 +331,7 @@ try
 
     overflowCourse.EnrolledCount = 1; // Course is already full
 
-    enrollService.ProcessRegistration(
+    //enrollService.ProcessRegistration(
         new Student
         {
             Id = "S99",
@@ -373,4 +373,4 @@ if (failures.Count > 0)
     } 
 } 
  
-Console.WriteLine("========================================"); 
+Console.WriteLine("========================================"); */
