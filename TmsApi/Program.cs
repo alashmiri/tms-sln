@@ -65,6 +65,39 @@ app.MapPost("/api/enrollments", async (IEnrollmentService svc, EnrollRequest req
     return Results.Ok(new { first, second, duplicateDetected = first.Id == second.Id });
 });
 
+// In-memory seed data
+var students = new List<Student>
+{
+    new() { Id = "S-001", Name = "Alice", Age = 20, GPA = 3.8m },
+    new() { Id = "S-002", Name = "Bob", Age = 22, GPA = 3.2m },
+    new() { Id = "S-003", Name = "Charlie", Age = 19, GPA = 3.5m },
+};
+
+var courses = new List<Course>
+{
+    new() { Code = "CS-101", Title = "Intro to Programming", Capacity = 30, EnrolledCount = 25 },
+    new() { Code = "CS-201", Title = "Data Structures", Capacity = 25, EnrolledCount = 20 },
+    new() { Code = "CS-301", Title = "Algorithms", Capacity = 20, EnrolledCount = 18 },
+};
+
+// Student endpoints
+app.MapGet("/students/all", () => Results.Ok(students));
+
+app.MapGet("/students/{id}", (string id) =>
+{
+    var student = students.FirstOrDefault(s => s.Id == id);
+    return student is not null ? Results.Ok(student) : Results.NotFound();
+});
+
+// Course endpoints
+app.MapGet("/courses/all", () => Results.Ok(courses));
+
+app.MapGet("/courses/{id}", (string id) =>
+{
+    var course = courses.FirstOrDefault(c => c.Code == id);
+    return course is not null ? Results.Ok(course) : Results.NotFound();
+});
+
 app.Run();
 
 public record EnrollRequest(string StudentId, string CourseCode);
