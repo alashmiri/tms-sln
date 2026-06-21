@@ -1,14 +1,8 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using TmsApi;
 
-// BUGGY VERSION (captive dependency — singleton takes scoped IEnrollmentService directly)
+/*/// BUGGY VERSION (captive dependency — singleton takes scoped IEnrollmentService directly)
 // Causes: "Cannot consume scoped service" at startup when ValidateScopes = true
-/*
+
 public class EnrollmentWorker : BackgroundService
 {
     private readonly IEnrollmentService _enrollmentService;
@@ -33,7 +27,7 @@ public class EnrollmentWorker : BackgroundService
 }*/
 
 
-/// FIXED VERSION — uses IServiceScopeFactory to safely resolve scoped service from singleton
+// FIXED VERSION — uses IServiceScopeFactory to safely resolve scoped service from singleton
 public class EnrollmentWorker : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;

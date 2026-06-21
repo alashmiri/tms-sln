@@ -1,12 +1,6 @@
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-
 namespace TmsApi;
-
+//--- The contract--
 public interface IEnrollmentService
 {
     Task<EnrollmentRecord> EnrollAsync(string studentId, string courseCode);
@@ -15,6 +9,7 @@ public interface IEnrollmentService
     Task<bool> DeleteAsync(string id);
 }
 
+//--- The in-memory implementation--
 public class EnrollmentService : IEnrollmentService
 {
     private readonly Dictionary<string, EnrollmentRecord> _store = new();
