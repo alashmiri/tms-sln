@@ -1,0 +1,122 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
+using TmsApi.Data;
+namespace TmsApi.Controllers;
+
+[ApiController]
+[Route("api/test")]
+public class TestController(TmsDbContext context) : ControllerBase
+{
+[HttpGet("deferred")]
+public IActionResult TestDeferred()
+{
+Console.WriteLine("\n>>> STEP 1: Building the query object (nodatabase contact)...");
+var query = context.Students.Where(s => s.GPA >= 3.0m);
+Console.WriteLine(">>> STEP 2: Appending a sorting clause...");
+var orderedQuery = query.OrderBy(s => s.Name);
+Console.WriteLine(">>> STEP 3: Materializing query into a C# List...");
+var results = orderedQuery.ToList(); // Execution is triggeredhere
+Console.WriteLine(">>> STEP 4: Materialization finished. List populated.\n");
+return Ok(results);
+}
+
+
+
+// Non-translatable helper method
+private static bool IsHonorRoll(decimal gpa)
+{
+return gpa >= 3.5m;
+}
+[HttpGet("translation-fail")]
+public IActionResult TestTranslationFail()
+{
+Console.WriteLine("\n>>> STEP 1: Running non-translatable query...");
+try
+{
+var students = context.Students
+.Where(s => IsHonorRoll(s.GPA)) // EF Core does not know how to map this method to SQL
+.ToList();
+return Ok(students);
+}
+catch (Exception ex)
+{
+Console.WriteLine($">>> EXCEPTION CAUGHT: {ex.Message}\n");
+return BadRequest(new { Message = ex.Message });
+}
+}
+
+ // Count
+[HttpGet("count-active-high-gpa")]
+public async Task<IActionResult> CountActiveHighGpa()
+{
+    var count = await context.Students
+        .Where(s => s.IsActive && s.GPA >= 3.0m)
+        .CountAsync();
+
+    return Ok(count);
+}
+
+  // Top Courses
+[HttpGet("top-courses")]
+public async Task<IActionResult> TopCourses()
+{
+    var list = await context.Courses
+        .Select(c => new
+        {
+            c.Title,
+            EnrollmentCount = c.Enrollments.Count
+        })
+        .OrderByDescending(x => x.EnrollmentCount)
+        .ToListAsync();
+
+    return Ok(list);
+}
+
+   // Average GPA
+[HttpGet("average-gpa")]
+public async Task<IActionResult> AverageGpaPerCourse()
+{
+    var list = await context.Enrollments
+        .GroupBy(e => e.Course.Title)
+        .Select(g => new
+        {
+            Course = g.Key,
+            AverageGPA = g.Average(e => e.Student.GPA)
+        })
+        .ToListAsync();
+
+    return Ok(list);
+}
+
+  // No Enrollments A
+[HttpGet("no-enrollments-a")]
+public async Task<IActionResult> NoEnrollmentsA()
+{
+    var list = await context.Students
+        .Where(s => !s.Enrollments.Any())
+        .Select(s => s.Name)
+        .ToListAsync();
+
+    return Ok(list);
+}
+
+ // No Enrollments B
+[HttpGet("no-enrollments-b")]
+public async Task<IActionResult> NoEnrollmentsB()
+{
+    var list = await context.Students
+        .GroupJoin(
+            context.Enrollments,
+            s => s.Id,
+            e => e.StudentId,
+            (s, e) => new { s, e }
+        )
+        .Where(x => !x.e.Any())
+        .Select(x => x.s.Name)
+        .ToListAsync();
+
+    return Ok(list);
+}
+}
